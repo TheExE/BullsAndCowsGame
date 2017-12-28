@@ -89,7 +89,7 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 				// Letters match at wrong position
 				BullCowCount.Cows++;
 			}
-		}		
+		}
 	}
 	
 	// If all the characters of word is bulls then we won the game
@@ -103,25 +103,31 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 
 bool FBullCowGame::IsIsogram(const FString& word) const
 {
-	for (unsigned int i = 0; i < word.length(); ++i)
+	bool bIsIsogram = true;
+	TMap<char, bool> charactersSeen;
+	for (auto letter : word)
 	{
-		for (unsigned int j = 0; j < word.length(); ++j)
+		letter = tolower(letter);
+		if(!charactersSeen[letter])
 		{
-			if (word[i] == word[j] && i != j)
-			{
-				return  false;				
-			}
-		}		
+			// Characters has not previously been seen
+			charactersSeen[letter] = true;
+		}
+		else
+		{
+			bIsIsogram = false;
+			break;
+		}
 	}
 
-	return true;
+	return bIsIsogram;
 }
 
-bool FBullCowGame::IsWordLowercase(const FString & word) const
+bool FBullCowGame::IsWordLowercase(const FString& word) const
 {
-	for (unsigned int i = 0; i < word.length(); ++i)
+	for (const auto& Letter : word)
 	{
-		if (!islower(word[i]))
+		if (!islower(Letter))
 		{
 			return false;
 		}

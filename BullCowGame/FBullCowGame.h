@@ -1,8 +1,12 @@
 #pragma once
 #include <string>
+#include <map>
 
 using FString = std::string;
 using int32 = int;
+
+template<typename T, typename K>
+using TMap = std::map<T, K>;
 
 struct FBullCowCount
 {
