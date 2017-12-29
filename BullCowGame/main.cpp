@@ -21,7 +21,7 @@ int main()
 		PrintIntro();
 		PlayGame();
 		PrintGameSummary();
-		bPlayeAgain = ShouldRunTheGameAgain();
+		bPlayeAgain = ShouldRunTheGameAgain();				
 
 	} while (bPlayeAgain);
 
@@ -30,21 +30,29 @@ int main()
 
 void PrintIntro()
 {
-	std::cout << "\n\nWelcome to Bulls and Cows, a fun game !" << std::endl;
+	std::cout << "Welcome to Bulls and Cows, a fun word game.\n";
+	std::cout << std::endl;
+	std::cout << "          }   {         ___ " << std::endl;
+	std::cout << "          (o o)        (o o) " << std::endl;
+	std::cout << "   /-------\\ /          \\ /-------\\ " << std::endl;
+	std::cout << "  / | BULL |O            O| COW  | \\ " << std::endl;
+	std::cout << " *  |-,--- |              |------|  * " << std::endl;
+	std::cout << "    ^      ^              ^      ^ " << std::endl;
+
 	std::cout << "Can you guess " << BCGame.GetHiddenWordLenght();
 	std::cout << " letter isogram I'am thinking of ?" << std::endl;
 }
 
 void PlayGame()
 {
-	int32 MaxTries = BCGame.GetMaxNumberOfTries();
+	// Starting a new game
+	BCGame.Reset();
+
+	int32 MaxTries = BCGame.GetMaxNumberOfTries();	
 
 	while (!BCGame.IsGameWon() && BCGame.GetCurrentTries() <= MaxTries)
 	{
 		// Ask for guess
-		std::cout << "Number of tries: " << BCGame.GetCurrentTries() <<
-			" Enter the guess: " << std::endl;
-
 		const FText Guess = GetValidGuess();
 
 		// Inform player about their guess
@@ -63,6 +71,10 @@ FText GetValidGuess()
 
 	while (!bIsGuessValid)
 	{
+		std::cout << "\nTries: " << BCGame.GetCurrentTries() << " out of " 
+		<< BCGame.GetMaxNumberOfTries() <<
+			" Enter the guess: ";
+
 		std::getline(std::cin, Guess);
 		EWordValidity Status = BCGame.CheckGuessValidity(Guess);
 
@@ -98,7 +110,7 @@ bool ShouldRunTheGameAgain()
 {	
 	std::cout << "Do you want to play again with same word? (y/n) " << std::endl;
 	FText answer;
-	std::cin >> answer;
+	std::getline(std::cin, answer);
 
 	return answer[0] == 'y' || answer[0] == 'Y';
 }
