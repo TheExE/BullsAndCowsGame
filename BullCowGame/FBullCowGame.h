@@ -1,12 +1,16 @@
 #pragma once
 #include <string>
 #include <map>
+#include <vector>
 
 using FString = std::string;
 using int32 = int;
 
 template<typename T, typename K>
 using TMap = std::map<T, K>;
+
+template<typename T>
+using TArray = std::vector<T>;
 
 struct FBullCowCount
 {
@@ -18,6 +22,12 @@ struct FBullCowCount
 		this->Bulls = Bulls;
 		this->Cows = Cows;
 	}
+};
+
+struct FGuess
+{
+	FString HiddenWord;
+	int32 NumberOfTriesToGuessIt;
 };
 
 enum class EWordValidity
@@ -37,23 +47,28 @@ public:
 
 	int32 GetMaxNumberOfTries() const;
 	int32 GetCurrentTries() const;
-	int32 GetHiddenWordLenght() const;
-	FString GetCurrentWord() const;	
-	bool IsGameWon() const;
+	int32 GetHiddenWordLenght() const;		
+	bool IsGameWon() const;	
 
-	EWordValidity CheckGuessValidity(const FString& guess) const;
 	void Reset();
+	
+	EWordValidity CheckGuessValidity(const FString& guess) const;	
 	FBullCowCount SubmitValidGuess(FString Guess); 
-	// TODO: Add method for incrementing the turn count
+	bool SubmitHiddenWordLenght(int32 HiddenWordLenght);
 
 private:
 
 	bool IsIsogram(const FString& word) const;
 	bool IsWordLowercase(const FString& word) const;
+	FString GetHiddenWord() const;
 
-	int32 MyMaxTries;
+	void SetHiddenWordLenght(int32 HiddenWordLength);
+		
+	TMap<int32, FGuess> MyWordLenghtToGuess;	
+	int32 MyHiddenWordLength;
 	int32 MyCurrentTry;
-	FString MyHiddenWord;
+	int32 MyMaxHiddenWordLenght;
+	int32 MyMinHiddenWordLenght;
 	bool bIsGameWon;
 };
 

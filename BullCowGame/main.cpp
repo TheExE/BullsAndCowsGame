@@ -10,6 +10,7 @@ void PlayGame();
 FText GetValidGuess();
 bool ShouldRunTheGameAgain();
 void PrintGameSummary();
+int32 SubmitHiddenWordLength();
 
 FBullCowGame BCGame;
 
@@ -48,8 +49,10 @@ void PlayGame()
 	// Starting a new game
 	BCGame.Reset();
 
-	int32 MaxTries = BCGame.GetMaxNumberOfTries();	
+	// Sets the desired game difficulty
+	int32 HiddenWordLength = SubmitHiddenWordLength();	
 
+	int32 MaxTries = BCGame.GetMaxNumberOfTries();	
 	while (!BCGame.IsGameWon() && BCGame.GetCurrentTries() <= MaxTries)
 	{
 		// Ask for guess
@@ -73,7 +76,7 @@ FText GetValidGuess()
 	{
 		std::cout << "\nTries: " << BCGame.GetCurrentTries() << " out of " 
 		<< BCGame.GetMaxNumberOfTries() <<
-			" Enter the guess: ";
+			". Enter the guess: \n=>";
 
 		std::getline(std::cin, Guess);
 		EWordValidity Status = BCGame.CheckGuessValidity(Guess);
@@ -108,7 +111,7 @@ FText GetValidGuess()
 
 bool ShouldRunTheGameAgain()
 {	
-	std::cout << "Do you want to play again with same word? (y/n) " << std::endl;
+	std::cout << "Do you want to play again with same word? (y/n) \n=>";
 	FText answer;
 	std::getline(std::cin, answer);
 
@@ -123,10 +126,27 @@ void PrintGameSummary()
 {
 	if(BCGame.IsGameWon())
 	{
-		std::cout << "Congratulation you won the game !" << std::endl;
+		std::cout << "\n\nCongratulation you won the game !\n\n";
 	}
 	else
 	{
-		std::cout << "Better luck next time !" << std::endl;
+		std::cout << "\n\nBetter luck next time !\n\n" << std::endl;
 	}	
+}
+
+int32 SubmitHiddenWordLength()
+{
+	int32 WordLength = 0;	
+	do
+	{
+		std::cout << "Please enter desired hidden word length (3, 4, 5 or 6)\n=>";
+		std::cin >> WordLength;
+
+		// Remove return character
+		FString ReturnCharacter = "";
+		std::getline(std::cin, ReturnCharacter);	
+	
+	} while(!BCGame.SubmitHiddenWordLenght(WordLength));
+	
+	return WordLength;
 }

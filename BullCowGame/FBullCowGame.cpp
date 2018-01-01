@@ -4,6 +4,37 @@
 
 FBullCowGame::FBullCowGame()
 {
+	// Init Word map
+	TArray<FString> AvailableWords = {"dog", "wing", "plant", "planet"};
+	MyMaxHiddenWordLenght = 0;
+	MyMinHiddenWordLenght = INT32_MAX;
+	for(auto& Word : AvailableWords)
+	{
+		/*
+		 * Function generated from: https://mycurvefit.com/ to
+		 * give a smooth number of tries increase as word lenght
+		 * grows.
+		 */
+		const int32 WordLenght = Word.length();
+		const int32 NumberOfTries = 28.63043 - 26.622199/
+			(1.0 + pow(WordLenght/6.023672, 4.822943));
+		FGuess Guess;
+		Guess.HiddenWord = Word;
+		Guess.NumberOfTriesToGuessIt = NumberOfTries;
+		MyWordLenghtToGuess[WordLenght] = Guess;
+
+		// Store min and max word lenght for future refenrece
+		if(WordLenght > MyMaxHiddenWordLenght)
+		{
+			MyMaxHiddenWordLenght = WordLenght;
+		}
+		 
+		if(WordLenght < MyMinHiddenWordLenght)
+		{
+			MyMinHiddenWordLenght = WordLenght;
+		}
+	}
+
 	Reset();
 }
 
@@ -33,20 +64,14 @@ EWordValidity FBullCowGame::CheckGuessValidity(const FString& guess) const
 }
 
 void FBullCowGame::Reset()
-{
-	constexpr int32 MAX_TRIES = 8;
-	MyMaxTries = MAX_TRIES;
-
-	const FString HIDDEN_WORD = "planet";
-	MyHiddenWord = HIDDEN_WORD;
-
+{		
 	MyCurrentTry = 1;
 	bIsGameWon = false;
 }
 
 int32 FBullCowGame::GetMaxNumberOfTries() const
 {
-	return MyMaxTries;
+	return MyWordLenghtToGuess.at(GetHiddenWordLenght()).NumberOfTriesToGuessIt;
 }
 
 int32 FBullCowGame::GetCurrentTries() const
@@ -56,7 +81,17 @@ int32 FBullCowGame::GetCurrentTries() const
 
 int32 FBullCowGame::GetHiddenWordLenght() const
 {
-	return MyHiddenWord.length();
+	return MyHiddenWordLength;
+}
+
+FString FBullCowGame::GetHiddenWord() const
+{
+	return MyWordLenghtToGuess.at(MyHiddenWordLength).HiddenWord;
+}
+
+void FBullCowGame::SetHiddenWordLenght(int32 HiddenWordLength)
+{
+	MyHiddenWordLength = HiddenWordLength;
 }
 
 bool FBullCowGame::IsGameWon() const
@@ -70,7 +105,8 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 	FBullCowCount BullCowCount(0, 0);
 
 	// Assumes both words are same lenght
-	int32 WordLenght = MyHiddenWord.length(); 
+	int32 WordLenght = MyHiddenWordLength; 
+	FString HiddenWord = GetHiddenWord();
 
 	// Loop through all letters in the hidden word
 	for(int32 i = 0; i < WordLenght; i++)
@@ -79,12 +115,12 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 		for(int32 j = 0; j < WordLenght; j++)
 		{
 			// Compare letter against the hidden word
-			if (MyHiddenWord[i] == Guess[j] && i == j)
+			if (HiddenWord[i] == Guess[j] && i == j)
 			{
 				// Letter match at right position
 				BullCowCount.Bulls++;
 			}
-			else if(MyHiddenWord[i] == Guess[j])
+			else if(HiddenWord[i] == Guess[j])
 			{
 				// Letters match at wrong position
 				BullCowCount.Cows++;
@@ -99,6 +135,19 @@ FBullCowCount FBullCowGame::SubmitValidGuess(FString Guess)
 	}
 
 	return BullCowCount;
+}
+
+bool FBullCowGame::SubmitHiddenWordLenght(int32 HiddenWordLenght)
+{
+	bool bIsTheLenghtValid = false;
+	if(HiddenWordLenght >= MyMinHiddenWordLenght &&
+		HiddenWordLenght <= MyMaxHiddenWordLenght)
+	{
+		SetHiddenWordLenght(HiddenWordLenght);
+		bIsTheLenghtValid = true;
+	}
+
+	return bIsTheLenghtValid;
 }
 
 bool FBullCowGame::IsIsogram(const FString& word) const
