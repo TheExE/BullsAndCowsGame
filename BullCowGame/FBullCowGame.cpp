@@ -4,7 +4,7 @@
 
 FBullCowGame::FBullCowGame()
 {
-	// Init Word map
+	// Init Word map, all hidden words MUST be an isogram.
 	TArray<FString> AvailableWords = {"dog", "wing", "plant", "planet"};
 	MyMaxHiddenWordLenght = 0;
 	MyMinHiddenWordLenght = INT32_MAX;
@@ -36,11 +36,6 @@ FBullCowGame::FBullCowGame()
 	}
 
 	Reset();
-}
-
-
-FBullCowGame::~FBullCowGame()
-{
 }
 
 EWordValidity FBullCowGame::CheckGuessValidity(const FString& guess) const

@@ -1,8 +1,15 @@
+/*
+ * Game logic container for simple guess the word game
+ * based on MasterMind.
+ */
+
 #pragma once
+
 #include <string>
 #include <map>
 #include <vector>
 
+// To make syntax Unreal friendly
 using FString = std::string;
 using int32 = int;
 
@@ -43,7 +50,6 @@ class FBullCowGame
 {
 public:
 	FBullCowGame();
-	~FBullCowGame();
 
 	int32 GetMaxNumberOfTries() const;
 	int32 GetCurrentTries() const;
@@ -57,7 +63,6 @@ public:
 	bool SubmitHiddenWordLenght(int32 HiddenWordLenght);
 
 private:
-
 	bool IsIsogram(const FString& word) const;
 	bool IsWordLowercase(const FString& word) const;
 	FString GetHiddenWord() const;

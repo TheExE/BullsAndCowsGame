@@ -1,7 +1,14 @@
+/*
+ * This is a console executable, that makes use of the FBullCowGame
+ * class. This acts as the view in a MVC pattern, and is responsible
+ * for all user interaction. For game logic see the FBullCowGame class.
+ */
+
 #include <iostream>
 #include <string>
 #include "FBullCowGame.h"
 
+// To make syntax Unreal friendly
 using FText = std::string;
 using int32 = int;
 
@@ -44,6 +51,9 @@ void PrintIntro()
 	std::cout << " letter isogram I'am thinking of ?" << std::endl;
 }
 
+/*
+ * Plays single game till completion.
+ */
 void PlayGame()
 {
 	// Starting a new game
@@ -102,6 +112,11 @@ FText GetValidGuess()
 
 		case EWordValidity::INVALID_CHARACTER:
 			std::cout << "Entered word contains invalid characters !" << std::endl;
+			break;
+
+		default:
+			std::cout << "[Error]: Invalid guess status " <<
+				(int)Status << " !" << std::endl;
 			break;
 		}
 	}
